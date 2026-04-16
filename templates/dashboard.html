@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Stroke Prediction Dashboard</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f4f6f9;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .links a {
+            margin-left: 15px;
+            text-decoration: none;
+            color: #4facfe;
+            font-weight: bold;
+        }
+
+        .section {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4facfe;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #3a8de0;
+        }
+
+        .best {
+            color: #27ae60;
+            font-weight: bold;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+
+            <div>
+                <h2>Stroke Prediction</h2>
+                <p>Welcome <b>{{user.first_name}}</b></p>
+            </div>
+
+            <div class="links">
+                <a href="/profile">Profile</a>
+                <a href="/history">History</a>
+                <a href="/logout">Logout</a>
+            </div>
+
+        </div>
+
+
+        <!-- Manual Model Prediction -->
+
+        <!-- <div class="section"> -->
+
+            <!-- <h3>Manual Model Prediction</h3>
+
+            <form action="/predict" method="post"> -->
+
+                <!-- <label>Select Machine Learning Model</label>
+
+                <select name="model" required>
+
+                    <option value="">--Select Model--</option>
+
+                    <option value="Random Forest Classifier">Random Forest Classifier</option>
+                    <option value="Logistic Regression Model">Logistic Regression Model</option>
+                    <option value="Decision Tree Classifier">Decision Tree Classifier</option>
+                    <option value="K Nearest Neighbors Algorithm">K Nearest Neighbors Algorithm</option>
+                    <option value="Support Vector Machine">Support Vector Machine</option>
+                    <option value="Gaussian Naive Bayes Algorithm">Gaussian Naive Bayes Algorithm</option>
+
+                </select>
+
+                <label>Gender</label>
+                <select name="param">
+                    <option value="">--Select--</option>
+                    <option value="1">Male</option>
+                    <option value="0">Female</option>
+                </select>
+
+                <label>Age</label>
+                <input type="number" name="param" required>
+
+                <label>Hypertension</label>
+                <select name="param">
+                    <option value="">--Select--</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+
+                <label>Heart Disease</label>
+                <select name="param">
+                    <option value="">--Select--</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+
+                <label>Ever Married</label>
+                <select name="param">
+                    <option value="">--Select--</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+
+                <label>Work Type</label>
+                <select name="param">
+                    <option value="">--Select--</option>
+                    <option value="0">Children</option>
+                    <option value="1">Private</option>
+                    <option value="2">Never Worked</option>
+                    <option value="3">Self Employed</option>
+                    <option value="4">Government Job</option>
+                </select>
+
+                <label>Residence Type</label>
+                <select name="param">
+                    <option value="">--Select--</option>
+                    <option value="0">Rural</option>
+                    <option value="1">Urban</option>
+                </select>
+
+                <label>Average Glucose Level</label>
+                <input type="number" step="0.1" name="param" required>
+
+                <label>BMI</label>
+                <input type="number" step="0.1" name="param" required>
+
+                <label>Smoking Status</label>
+                <select name="param">
+                    <option value="">--Select--</option>
+                    <option value="0">Unknown</option>
+                    <option value="1">Never Smoked</option>
+                    <option value="2">Formerly Smoked</option>
+                    <option value="3">Smokes</option>
+                </select>
+                <button type="submit">Predict</button>
+            </form>
+
+        </div> -->
+
+
+
+        <!-- Automatic AI Prediction -->
+
+        <!-- <div class="section"> -->
+
+
+            <!-- <h3>Automatic Brainstroke Prediction</h3> -->
+
+            <h4>System will automatically choose the best Machine Learning model based on prediction probability.</h4>
+
+            <form action="/auto_predict" method="post">
+
+                <label>Gender</label>
+                <select name="param">
+                    <option value="">--Select--</option>
+                    <option value="1">Male</option>
+                    <option value="0">Female</option>
+                </select>
+
+                <label>Age</label>
+                <input type="number" name="param" required>
+
+                <label>Hypertension</label>
+                <select name="param">
+                    <option value="">--Select--</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+
+                <label>Heart Disease</label>
+                <select name="param">
+                    <option value="">--Select--</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+
+                <label>Ever Married</label>
+                <select name="param">
+                    <option value="">--Select--</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+
+                <label>Work Type</label>
+                <select name="param">
+                    <option value="">--Select--</option>
+                    <option value="0">Children</option>
+                    <option value="1">Private</option>
+                    <option value="2">Never Worked</option>
+                    <option value="3">Self Employed</option>
+                    <option value="4">Government Job</option>
+                </select>
+
+                <label>Residence Type</label>
+                <select name="param">
+                    <option value="">--Select--</option>
+                    <option value="0">Rural</option>
+                    <option value="1">Urban</option>
+                </select>
+
+                <label>Average Glucose Level</label>
+                <input type="number" step="0.1" name="param" required>
+
+                <label>BMI</label>
+                <input type="number" step="0.1" name="param" required>
+
+                <label>Smoking Status</label>
+                <select name="param">
+                    <option value="">--Select--</option>
+                    <option value="0">Unknown</option>
+                    <option value="1">Never Smoked</option>
+                    <option value="2">Formerly Smoked</option>
+                    <option value="3">Smokes</option>
+                </select>
+
+                <button type="submit">Predict with Bestmodel</button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

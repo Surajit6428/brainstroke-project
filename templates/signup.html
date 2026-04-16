@@ -1,0 +1,179 @@
+<!DOCTYPE html> 
+<html>
+
+<head>
+
+<title>Create Account</title>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+}
+
+.row input { flex: 1; }
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #4facfe;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.error { color:red; text-align:center; }
+.success { color:green; text-align:center; }
+
+.password-box { position:relative; }
+
+.password-box span {
+    position:absolute;
+    right:12px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+}
+
+.resend{
+    margin-top:10px;
+    background:#ccc;
+    cursor:not-allowed;
+}
+
+.resend.active{
+    background:#4facfe;
+    color:white;
+    cursor:pointer;
+}
+
+</style>
+
+<script>
+function togglePassword(){
+    let pass=document.getElementById("password");
+    pass.type = pass.type==="password"?"text":"password";
+}
+
+/* TIMER */
+let time=30;
+function startTimer(){
+    let timer=document.getElementById("timer");
+    let btn=document.getElementById("resendBtn");
+
+    if(timer){
+        let interval=setInterval(()=>{
+            time--;
+            timer.innerText=time;
+
+            if(time<=0){
+                clearInterval(interval);
+                btn.disabled=false;
+                btn.classList.add("active");
+                btn.innerText="Resend OTP";
+            }
+        },1000);
+    }
+}
+</script>
+
+</head>
+
+<body onload="startTimer()">
+
+<div class="container">
+
+<h2>Create Account</h2>
+
+{% if error %}
+<div class="error">{{error}}</div>
+{% endif %}
+
+{% if success %}
+<div class="success">{{success}}</div>
+{% endif %}
+
+<!-- ================= FORM ================= -->
+{% if stage == "form" %}
+
+<form action="/signup" method="post">
+
+<div class="row">
+<input type="text" name="first_name" placeholder="First Name" required>
+<input type="text" name="middle_name" placeholder="Middle Name">
+</div>
+
+<input type="text" name="last_name" placeholder="Last Name" required>
+<input type="text" name="username" placeholder="Username" required>
+<input type="email" name="email" placeholder="Email Address" required>
+
+<div class="password-box">
+<input type="password" id="password" name="password" placeholder="Password" required>
+<span onclick="togglePassword()"></span>
+</div>
+
+<button type="submit">Signup</button>
+
+</form>
+
+{% endif %}
+
+<!-- ================= OTP ================= -->
+{% if stage == "otp" %}
+
+<p style="text-align:center;">OTP sent to {{email}}</p>
+
+<form action="/verify_otp" method="post">
+<input type="text" name="otp" placeholder="Enter OTP" required>
+<button>Verify OTP</button>
+</form>
+
+<button id="resendBtn" class="resend" disabled onclick="location.href='/resend_otp'">
+Resend OTP (<span id="timer">30</span>)
+</button>
+
+{% endif %}
+
+<div style="text-align:center;margin-top:15px;">
+Already have an account? <a href="/">Login</a>
+</div>
+
+</div>
+
+</body>
+</html>
