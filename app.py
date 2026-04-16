@@ -107,7 +107,7 @@ model = joblib.load("stroke_model.pkl")
 
 @app.route("/")
 def home():
-    return render_template("login.html")
+    return render_template("index.html")
 
 
 
@@ -255,7 +255,7 @@ def login():
         flash("Invalid username or password ❌", "error")
         return redirect("/login")
 
-    return render_template("login.html")
+    return render_template("index.html")
 
 # ================= FORGOT PASSWORD (START) =================
 

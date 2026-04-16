@@ -11,5 +11,5 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# Model / বড় file (optional)
+# Model / 
 stroke_dataset_500k_balanced.csv
