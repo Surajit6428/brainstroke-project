@@ -29,6 +29,8 @@ Built using **Flask, MongoDB, and Scikit-learn**.
 
 ## 📁 Project Structure
 
+<pre>
+
 BRAINSTROKE/
 │
 ├── templates/
@@ -57,7 +59,7 @@ BRAINSTROKE/
 ├── requirements.txt
 ├── .env
 ├── README.md
-
+</pre>
 ---
 
 ## 📦 Installation & Setup
