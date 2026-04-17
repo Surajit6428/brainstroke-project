@@ -4,7 +4,7 @@
 <head>
 
     <title>Stroke Prediction Result</title>
-<link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <style>
@@ -33,21 +33,26 @@
             margin-bottom: 10px;
         }
 
-        .model {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 15px;
-        }
-
         .percent {
             font-size: 30px;
             font-weight: bold;
             margin-bottom: 15px;
         }
 
+        /* 🔥 Risk Styles */
         .risk-high {
             background: #ffe5e5;
             color: #e74c3c;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .risk-medium {
+            background: #fff4e5;
+            color: #f39c12;
             padding: 15px;
             border-radius: 8px;
             font-size: 20px;
@@ -63,28 +68,6 @@
             font-size: 20px;
             font-weight: bold;
             margin-bottom: 20px;
-        }
-
-        .bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 8px 0;
-            font-size: 14px;
-        }
-
-        .progress {
-            height: 10px;
-            background: #ddd;
-            border-radius: 6px;
-            flex: 1;
-            margin: 0 10px;
-            overflow: hidden;
-        }
-
-        .fill {
-            height: 10px;
-            background: #4facfe;
         }
 
         .buttons {
@@ -115,60 +98,31 @@
 
         <h2>Stroke Prediction Result</h2>
 
-        <!-- <div class="model">
-            Model Used: <b>{{model}}</b>
-        </div> -->
-
         <div class="percent">
             Stroke Risk: {{risk}}%
         </div>
 
-        {% if prediction==1 %}
+        <!-- 🔥 NEW LOGIC BASED ON LEVEL -->
 
-        <div class="risk-high">
-            ⚠ High Stroke Risk
-        </div>
+        {% if level == "High" %}
+            <div class="risk-high">
+                ⚠ High Stroke Risk
+            </div>
+
+        {% elif level == "Medium" %}
+            <div class="risk-medium">
+                ⚠ Medium Stroke Risk
+            </div>
 
         {% else %}
-
-        <div class="risk-low">
-            ✔ Low Stroke Risk
-        </div>
-
+            <div class="risk-low">
+                ✔ Low Stroke Risk
+            </div>
         {% endif %}
 
-        <!-- Risk Visualization -->
-
-        <!-- <div class="bar">
-            Low
-            <div class="progress">
-                <div class="fill" style="width:30%"></div>
-            </div>
-            30%
-        </div>
-
-        <div class="bar">
-            Medium
-            <div class="progress">
-                <div class="fill" style="width:50%"></div>
-            </div>
-            50%
-        </div>
-
-        <div class="bar">
-            High
-            <div class="progress">
-                <div class="fill" style="width:{{risk}}%"></div>
-            </div>
-            {{risk}}%
-        </div> -->
-
         <div class="buttons">
-
             <a href="/dashboard">Predict Again</a>
-
             <a href="/logout">Logout</a>
-
         </div>
 
     </div>

@@ -5,7 +5,6 @@
 
     <title>Stroke Prediction Dashboard</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <style>
@@ -46,11 +45,6 @@
             border-radius: 8px;
         }
 
-        h3 {
-            margin-top: 0;
-            color: #2c3e50;
-        }
-
         input,
         select {
             width: 100%;
@@ -76,9 +70,9 @@
             background: #3a8de0;
         }
 
-        .best {
-            color: #27ae60;
-            font-weight: bold;
+        .error {
+            color: red;
+            margin-bottom: 10px;
         }
     </style>
 
@@ -103,113 +97,20 @@
 
         </div>
 
+        <div class="section">
 
-        <!-- Manual Model Prediction -->
+            <h4>System will automatically choose the best Machine Learning model</h4>
 
-        <!-- <div class="section"> -->
-
-            <!-- <h3>Manual Model Prediction</h3>
-
-            <form action="/predict" method="post"> -->
-
-                <!-- <label>Select Machine Learning Model</label>
-
-                <select name="model" required>
-
-                    <option value="">--Select Model--</option>
-
-                    <option value="Random Forest Classifier">Random Forest Classifier</option>
-                    <option value="Logistic Regression Model">Logistic Regression Model</option>
-                    <option value="Decision Tree Classifier">Decision Tree Classifier</option>
-                    <option value="K Nearest Neighbors Algorithm">K Nearest Neighbors Algorithm</option>
-                    <option value="Support Vector Machine">Support Vector Machine</option>
-                    <option value="Gaussian Naive Bayes Algorithm">Gaussian Naive Bayes Algorithm</option>
-
-                </select>
-
-                <label>Gender</label>
-                <select name="param">
-                    <option value="">--Select--</option>
-                    <option value="1">Male</option>
-                    <option value="0">Female</option>
-                </select>
-
-                <label>Age</label>
-                <input type="number" name="param" required>
-
-                <label>Hypertension</label>
-                <select name="param">
-                    <option value="">--Select--</option>
-                    <option value="0">No</option>
-                    <option value="1">Yes</option>
-                </select>
-
-                <label>Heart Disease</label>
-                <select name="param">
-                    <option value="">--Select--</option>
-                    <option value="0">No</option>
-                    <option value="1">Yes</option>
-                </select>
-
-                <label>Ever Married</label>
-                <select name="param">
-                    <option value="">--Select--</option>
-                    <option value="0">No</option>
-                    <option value="1">Yes</option>
-                </select>
-
-                <label>Work Type</label>
-                <select name="param">
-                    <option value="">--Select--</option>
-                    <option value="0">Children</option>
-                    <option value="1">Private</option>
-                    <option value="2">Never Worked</option>
-                    <option value="3">Self Employed</option>
-                    <option value="4">Government Job</option>
-                </select>
-
-                <label>Residence Type</label>
-                <select name="param">
-                    <option value="">--Select--</option>
-                    <option value="0">Rural</option>
-                    <option value="1">Urban</option>
-                </select>
-
-                <label>Average Glucose Level</label>
-                <input type="number" step="0.1" name="param" required>
-
-                <label>BMI</label>
-                <input type="number" step="0.1" name="param" required>
-
-                <label>Smoking Status</label>
-                <select name="param">
-                    <option value="">--Select--</option>
-                    <option value="0">Unknown</option>
-                    <option value="1">Never Smoked</option>
-                    <option value="2">Formerly Smoked</option>
-                    <option value="3">Smokes</option>
-                </select>
-                <button type="submit">Predict</button>
-            </form>
-
-        </div> -->
-
-
-
-        <!-- Automatic AI Prediction -->
-
-        <!-- <div class="section"> -->
-
-
-            <!-- <h3>Automatic Brainstroke Prediction</h3> -->
-
-            <h4>System will automatically choose the best Machine Learning model based on prediction probability.</h4>
+            <!-- ERROR SHOW -->
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
 
             <form action="/auto_predict" method="post">
 
                 <label>Gender</label>
-                <select name="param">
-                    <option value="">--Select--</option>
+                <select name="param" required>
+                    <option value="" disabled selected>--Select--</option>
                     <option value="1">Male</option>
                     <option value="0">Female</option>
                 </select>
@@ -218,29 +119,29 @@
                 <input type="number" name="param" required>
 
                 <label>Hypertension</label>
-                <select name="param">
-                    <option value="">--Select--</option>
+                <select name="param" required>
+                    <option value="" disabled selected>--Select--</option>
                     <option value="0">No</option>
                     <option value="1">Yes</option>
                 </select>
 
                 <label>Heart Disease</label>
-                <select name="param">
-                    <option value="">--Select--</option>
+                <select name="param" required>
+                    <option value="" disabled selected>--Select--</option>
                     <option value="0">No</option>
                     <option value="1">Yes</option>
                 </select>
 
                 <label>Ever Married</label>
-                <select name="param">
-                    <option value="">--Select--</option>
+                <select name="param" required>
+                    <option value="" disabled selected>--Select--</option>
                     <option value="0">No</option>
                     <option value="1">Yes</option>
                 </select>
 
                 <label>Work Type</label>
-                <select name="param">
-                    <option value="">--Select--</option>
+                <select name="param" required>
+                    <option value="" disabled selected>--Select--</option>
                     <option value="0">Children</option>
                     <option value="1">Private</option>
                     <option value="2">Never Worked</option>
@@ -249,8 +150,8 @@
                 </select>
 
                 <label>Residence Type</label>
-                <select name="param">
-                    <option value="">--Select--</option>
+                <select name="param" required>
+                    <option value="" disabled selected>--Select--</option>
                     <option value="0">Rural</option>
                     <option value="1">Urban</option>
                 </select>
@@ -262,15 +163,15 @@
                 <input type="number" step="0.1" name="param" required>
 
                 <label>Smoking Status</label>
-                <select name="param">
-                    <option value="">--Select--</option>
+                <select name="param" required>
+                    <option value="" disabled selected>--Select--</option>
                     <option value="0">Unknown</option>
                     <option value="1">Never Smoked</option>
                     <option value="2">Formerly Smoked</option>
                     <option value="3">Smokes</option>
                 </select>
 
-                <button type="submit">Predict with Bestmodel</button>
+                <button type="submit">Predict with Best Model</button>
 
             </form>
 

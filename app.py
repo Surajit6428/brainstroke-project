@@ -199,7 +199,7 @@ def verify_otp():
         return render_template(
             "signup.html",
             stage="form",
-            success="Account created successfully! Redirecting..."
+            success="Account created successfully!"
         )
 
     return render_template(
@@ -562,20 +562,29 @@ def auto_predict():
     except:
         risk = 50
 
+    # 🔥 NEW: Risk Level
+    if risk < 30:
+        level = "Low"
+    elif risk < 70:
+        level = "Medium"
+    else:
+        level = "High"
+
     predictions.insert_one({
         "user": session["user"],
         "model": "AI Automatic Model",
         "prediction": int(pred),
-        "risk": risk
+        "risk": risk,
+        "level": level   # NEW FIELD
     })
 
     return render_template(
         "result.html",
         prediction=pred,
         risk=risk,
+        level=level,   # SEND TO FRONTEND
         model="AI Automatic Model"
     )
-
 
 # ================= LOGOUT =================
 

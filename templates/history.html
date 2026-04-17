@@ -54,9 +54,12 @@
 
         .badge {
             padding: 6px 12px;
-            border-radius: 6px;
+            border-radius: 20px;
             font-size: 13px;
             font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .high {
@@ -67,6 +70,11 @@
         .low {
             background: #eafaf1;
             color: #27ae60;
+        }
+
+        .risk-value {
+            font-size: 12px;
+            font-weight: normal;
         }
 
         .back {
@@ -110,11 +118,17 @@
 
                     {% if item.prediction == 1 %}
 
-                    <span class="badge high">High</span>
+                        <span class="badge high">
+                            High
+                            <span class="risk-value">({{item.risk}}%)</span>
+                        </span>
 
                     {% else %}
 
-                    <span class="badge low">Low</span>
+                        <span class="badge low">
+                            Low
+                            <span class="risk-value">({{item.risk}}%)</span>
+                        </span>
 
                     {% endif %}
 
@@ -127,9 +141,7 @@
         </table>
 
         <div class="back">
-
             <a href="/dashboard">⬅ Back to Dashboard</a>
-
         </div>
 
     </div>
