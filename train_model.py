@@ -7,14 +7,14 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
-# from sklearn.svm import SVC
+from sklearn.svm import SVC
 
 from sklearn.metrics import accuracy_score
 
 
 # ================= LOAD DATA =================
 
-data = pd.read_csv("stroke_dataset_500k_balanced.csv")
+data = pd.read_csv("Brain.csv")
 
 print("Original Dataset Size:", len(data))
 

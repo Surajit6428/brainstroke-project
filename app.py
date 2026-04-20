@@ -43,9 +43,23 @@ def send_otp_email(receiver_email, otp):
     sender_email = os.getenv("EMAIL_USER")
     password = os.getenv("EMAIL_PASS")
 
-    message = MIMEText(f"Your OTP Code is: {otp}")
+    message = MIMEText(f"""
+Hello,
 
-    message["Subject"] = "Brainstroke OTP Verification"
+Your One-Time Password (OTP) for verification is:{otp}
+
+This OTP is valid for 5 minutes.
+
+Please do not share this code with anyone.
+
+If you did not request this, please ignore this email.
+
+Regards,  
+Brain Stroke Prediction Team
+""")
+
+
+    message["Subject"] = "Secure OTP Verification"
     message["From"] = sender_email
     message["To"] = receiver_email
 
@@ -65,19 +79,26 @@ def send_welcome_email(receiver_email, username, user_password, name):
     message = MIMEText(f"""
 Dear {name},
 
-Welcome to Brainstroke Prediction System.
+Welcome to the Brain Stroke Prediction System.
 
-Your account has been successfully created.
+Your account has been successfully created. You can now log in and start using our AI-powered prediction service.
 
-Login Details:
+----------------------------------------
+Account Details:
 
-User ID : {username}
+Username : {username}
 Password : {user_password}
+----------------------------------------
 
-Brainstroke Prediction System
+⚠️ For security reasons, we recommend changing your password after your first login.
+
+If you did not create this account, please ignore this email or contact our support team.
+
+Best regards,  
+Brain Stroke Prediction Team  
 """)
 
-    message["Subject"] = "Brainstroke Account Created"
+    message["Subject"] ="🎉 Welcome! Your Brainstroke Account is Ready"
     message["From"] = sender_email
     message["To"] = receiver_email
 
@@ -107,7 +128,7 @@ model = joblib.load("stroke_model.pkl")
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+   return render_template("index.html")
 
 
 
@@ -178,7 +199,6 @@ def verify_otp():
             error="OTP expired"
         )
 
-    # सही OTP
     if user_otp == session.get("otp"):
 
         user_data = session["temp_user"]
@@ -255,7 +275,7 @@ def login():
         flash("Invalid username or password ❌", "error")
         return redirect("/login")
 
-    return render_template("index.html")
+    return render_template("login.html")
 
 # ================= FORGOT PASSWORD (START) =================
 
@@ -572,7 +592,7 @@ def auto_predict():
 
     predictions.insert_one({
         "user": session["user"],
-        "model": "AI Automatic Model",
+        "model": "Best Model",
         "prediction": int(pred),
         "risk": risk,
         "level": level   # NEW FIELD
@@ -583,7 +603,7 @@ def auto_predict():
         prediction=pred,
         risk=risk,
         level=level,   # SEND TO FRONTEND
-        model="AI Automatic Model"
+        model="Best Model"
     )
 
 # ================= LOGOUT =================

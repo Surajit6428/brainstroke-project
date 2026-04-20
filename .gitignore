@@ -12,4 +12,4 @@ __pycache__/
 Thumbs.db
 
 # Model / 
-stroke_dataset_500k_balanced.csv
+Brain.csv

@@ -2,149 +2,318 @@
 <html>
 
 <head>
-
     <title>Prediction History</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: Arial;
-            background: #f4f6f9;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background:
+                linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)),
+                url("{{ url_for('static', filename='bg.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
+            transition: .4s;
+        }
+
+        body.light {
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
+                url("{{ url_for('static', filename='bg.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #1e293b;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, .05);
+            backdrop-filter: blur(10px);
+        }
+
+        body.light .navbar {
+            background: #fff;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .icon-btn,
+        .toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .1);
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.1);
+            background: rgba(79, 172, 254, .2);
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .1);
+            font-size: 18px;
+        }
+
+        .toggle:hover {
+            transform: rotate(180deg) scale(1.1);
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px 20px;
         }
 
-        h2 {
+        .header {
             text-align: center;
-            margin-bottom: 25px;
-            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            font-size: 28px;
+            font-weight: 700;
         }
 
         table {
             width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-            text-align: center;
+            border-spacing: 0 12px;
         }
 
         th {
-            background: #4facfe;
-            color: white;
+            text-align: left;
+            padding: 10px;
+            color: #94a3b8;
         }
 
-        tr:hover {
-            background: #f2f7ff;
+        td {
+            padding: 16px;
+        }
+
+        tbody tr {
+            background: rgba(255, 255, 255, .05);
+            border-radius: 10px;
+            transition: .3s;
+        }
+
+        body.light tbody tr {
+            background: #fff;
+        }
+
+        tbody tr:hover {
+            transform: scale(1.02);
         }
 
         .badge {
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-size: 13px;
-            font-weight: bold;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            font-weight: 600;
         }
 
         .high {
-            background: #ffe5e5;
-            color: #e74c3c;
+            background: rgba(239, 68, 68, .15);
+            color: #ef4444;
+        }
+
+        .medium {
+            background: rgba(234, 179, 8, .2);
+            color: #eab308;
         }
 
         .low {
-            background: #eafaf1;
-            color: #27ae60;
+            background: rgba(34, 197, 94, .15);
+            color: #22c55e;
         }
 
-        .risk-value {
-            font-size: 12px;
-            font-weight: normal;
+        .popup {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .5);
+            justify-content: center;
+            align-items: center;
         }
 
-        .back {
+        .popup-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
             text-align: center;
-            margin-top: 20px;
         }
 
-        .back a {
-            text-decoration: none;
-            color: #4facfe;
-            font-weight: bold;
-            font-size: 16px;
+        .popup-box button {
+            margin: 10px;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .yes {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        .no {
+            background: #ccc;
         }
     </style>
-
 </head>
 
 <body>
 
+    <div class="navbar">
+        <div class="logo">Brainstroke Prediction</div>
+
+        <div class="nav-right">
+
+            <div class="icon-btn" onclick="location.href='/profile'">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="7" r="4" />
+                    <path d="M5.5 21a6.5 6.5 0 0 1 13 0" />
+                </svg>
+            </div>
+
+            <div class="icon-btn" onclick="location.href='/dashboard'">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                </svg>
+            </div>
+
+            <div class="icon-btn logout-btn" onclick="openPopup()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+            </div>
+
+            <div class="toggle" onclick="toggleTheme()" id="themeIcon">🌙</div>
+
+        </div>
+    </div>
+
     <div class="container">
-
-        <h2>Prediction History</h2>
-
-        <table>
-
-            <tr>
-                <th>#</th>
-                <th>Machine Learning Model</th>
-                <th>Status</th>
-            </tr>
-
-            {% for item in data %}
-
-            <tr>
-
-                <td>{{loop.index}}</td>
-
-                <td>{{item.model}}</td>
-
-                <td>
-
-                    {% if item.prediction == 1 %}
-
-                        <span class="badge high">
-                            High
-                            <span class="risk-value">({{item.risk}}%)</span>
-                        </span>
-
-                    {% else %}
-
-                        <span class="badge low">
-                            Low
-                            <span class="risk-value">({{item.risk}}%)</span>
-                        </span>
-
-                    {% endif %}
-
-                </td>
-
-            </tr>
-
-            {% endfor %}
-
-        </table>
-
-        <div class="back">
-            <a href="/dashboard">⬅ Back to Dashboard</a>
+        <div class="header">
+            <h2>Prediction History</h2>
         </div>
 
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Machine Learning Model</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in data %}
+                <tr>
+                    <td>{{loop.index}}</td>
+                    <td>{{item.model}}</td>
+                    <td>
+                        {% if item.risk >= 70 %}
+                        <span class="badge high">High ({{item.risk}}%)</span>
+                        {% elif item.risk >= 40 %}
+                        <span class="badge medium">Medium ({{item.risk}}%)</span>
+                        {% else %}
+                        <span class="badge low">Low ({{item.risk}}%)</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+
+    <div class="popup" id="logoutPopup">
+        <div class="popup-box">
+            <p>Are you sure to logout?</p>
+            <button class="yes" onclick="logout()">Yes</button>
+            <button class="no" onclick="closePopup()">No</button>
+        </div>
+    </div>
+
+    <script>
+        const body = document.body;
+        const icon = document.getElementById("themeIcon");
+        const popup = document.getElementById("logoutPopup");
+
+        function toggleTheme() {
+            body.classList.toggle("light");
+            localStorage.setItem("theme", body.classList.contains("light") ? "light" : "dark");
+            updateIcon();
+        }
+
+        function updateIcon() {
+            icon.innerHTML = body.classList.contains("light") ? "☀" : "🌙";
+        }
+
+        window.onload = () => {
+            if (localStorage.getItem("theme") === "light") body.classList.add("light");
+            updateIcon();
+        };
+
+        function openPopup() {
+            popup.style.display = "flex";
+        }
+
+        function closePopup() {
+            popup.style.display = "none";
+        }
+
+        function logout() {
+            location.href = "/logout";
+        }
+    </script>
 
 </body>
 

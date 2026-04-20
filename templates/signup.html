@@ -1,179 +1,243 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
 
 <head>
 
-<title>Create Account</title>
-<link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create Account</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<style>
-body {
-    margin: 0;
-    font-family: Arial;
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
 
-.container {
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 420px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-}
+        body {
+            font-family: Arial;
 
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
+            background-image: url("{{ url_for('static', filename='bg.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
 
-.row {
-    display: flex;
-    gap: 10px;
-}
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
-.row input { flex: 1; }
+            position: relative;
+        }
 
-input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-}
+        /* OVERLAY */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.75);
+            z-index: 0;
+        }
 
-button {
-    width: 100%;
-    padding: 12px;
-    background: #4facfe;
-    border: none;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-}
+        body.dark::before {
+            background: rgba(0,0,0,0.7);
+        }
 
-.error { color:red; text-align:center; }
-.success { color:green; text-align:center; }
+        .container {
+            position: relative;
+            z-index: 2;
 
-.password-box { position:relative; }
+            background: rgba(255,255,255,0.95);
+            padding: 40px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 420px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
 
-.password-box span {
-    position:absolute;
-    right:12px;
-    top:50%;
-    transform:translateY(-50%);
-    cursor:pointer;
-}
+        body.dark .container {
+            background: rgba(30,30,30,0.9);
+            color: white;
+        }
 
-.resend{
-    margin-top:10px;
-    background:#ccc;
-    cursor:not-allowed;
-}
+        body.dark input {
+            background: #222;
+            color: white;
+            border: 1px solid #555;
+        }
 
-.resend.active{
-    background:#4facfe;
-    color:white;
-    cursor:pointer;
-}
+        body.dark a {
+            color: #4facfe;
+        }
 
-</style>
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-<script>
-function togglePassword(){
-    let pass=document.getElementById("password");
-    pass.type = pass.type==="password"?"text":"password";
-}
+        .row {
+            display: flex;
+            gap: 10px;
+        }
 
-/* TIMER */
-let time=30;
-function startTimer(){
-    let timer=document.getElementById("timer");
-    let btn=document.getElementById("resendBtn");
+        .row input {
+            flex: 1;
+        }
 
-    if(timer){
-        let interval=setInterval(()=>{
-            time--;
-            timer.innerText=time;
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
 
-            if(time<=0){
-                clearInterval(interval);
-                btn.disabled=false;
-                btn.classList.add("active");
-                btn.innerText="Resend OTP";
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4facfe;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+        }
+
+        .success {
+            color: green;
+            text-align: center;
+        }
+
+        .password-box {
+            position: relative;
+        }
+
+        .password-box span {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        .resend {
+            margin-top: 10px;
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .resend.active {
+            background: #4facfe;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        function togglePassword() {
+            let pass = document.getElementById("password");
+            pass.type = pass.type === "password" ? "text" : "password";
+        }
+
+        let time = 30;
+        function startTimer() {
+            let timer = document.getElementById("timer");
+            let btn = document.getElementById("resendBtn");
+
+            if (timer) {
+                let interval = setInterval(() => {
+                    time--;
+                    timer.innerText = time;
+
+                    if (time <= 0) {
+                        clearInterval(interval);
+                        btn.disabled = false;
+                        btn.classList.add("active");
+                        btn.innerText = "Resend OTP";
+                    }
+                }, 1000);
             }
-        },1000);
-    }
-}
-</script>
+        }
+
+        function validatePassword() {
+            let pass = document.getElementById("password").value;
+            let confirm = document.getElementById("confirm_password").value;
+
+            if (pass !== confirm) {
+                alert("Passwords do not match ❌");
+                return false;
+            }
+            return true;
+        }
+    </script>
 
 </head>
 
 <body onload="startTimer()">
 
-<div class="container">
+    <div class="container">
 
-<h2>Create Account</h2>
+        <h2>Create Account</h2>
 
-{% if error %}
-<div class="error">{{error}}</div>
-{% endif %}
+        {% if error %}
+        <div class="error">{{error}}</div>
+        {% endif %}
 
-{% if success %}
-<div class="success">{{success}}</div>
-{% endif %}
+        {% if success %}
+        <div class="success">{{success}}</div>
+        {% endif %}
 
-<!-- ================= FORM ================= -->
-{% if stage == "form" %}
+        {% if stage == "form" %}
 
-<form action="/signup" method="post">
+        <form action="/signup" method="post" onsubmit="return validatePassword()">
 
-<div class="row">
-<input type="text" name="first_name" placeholder="First Name" required>
-<input type="text" name="middle_name" placeholder="Middle Name">
-</div>
+            <div class="row">
+                <input type="text" name="first_name" placeholder="First Name" required>
+                <input type="text" name="middle_name" placeholder="Middle Name">
+            </div>
 
-<input type="text" name="last_name" placeholder="Last Name" required>
-<input type="text" name="username" placeholder="Username" required>
-<input type="email" name="email" placeholder="Email Address" required>
+            <input type="text" name="last_name" placeholder="Last Name" required>
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email Address" required>
 
-<div class="password-box">
-<input type="password" id="password" name="password" placeholder="Password" required>
-<span onclick="togglePassword()"></span>
-</div>
+            <div class="password-box">
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <span onclick="togglePassword()"></span>
+            </div>
 
-<button type="submit">Signup</button>
+            <div class="password-box">
+                <input type="password" id="confirm_password" placeholder="Confirm Password" required>
+            </div>
 
-</form>
+            <button type="submit">Signup</button>
 
-{% endif %}
+        </form>
 
-<!-- ================= OTP ================= -->
-{% if stage == "otp" %}
+        {% endif %}
 
-<p style="text-align:center;">OTP sent to {{email}}</p>
+        {% if stage == "otp" %}
 
-<form action="/verify_otp" method="post">
-<input type="text" name="otp" placeholder="Enter OTP" required>
-<button>Verify OTP</button>
-</form>
+        <p style="text-align:center;">OTP sent to {{email}}</p>
 
-<button id="resendBtn" class="resend" disabled onclick="location.href='/resend_otp'">
-Resend OTP (<span id="timer">30</span>)
-</button>
+        <form action="/verify_otp" method="post">
+            <input type="text" name="otp" placeholder="Enter OTP" required>
+            <button>Verify OTP</button>
+        </form>
 
-{% endif %}
+        <button id="resendBtn" class="resend" disabled onclick="location.href='/resend_otp'">
+            Resend OTP (<span id="timer">30</span>)
+        </button>
 
-<div style="text-align:center;margin-top:15px;">
-Already have an account? <a href="/">Login</a>
-</div>
+        {% endif %}
 
-</div>
+        <div style="text-align:center;margin-top:15px;">
+            Already have an account? <a href="/login">Login</a>
+        </div>
+
+    </div>
 
 </body>
+
 </html>

@@ -1,31 +1,90 @@
-# 🧠 Brain Stroke Prediction Web App
+<h1 align="center">🧠 Brain Stroke Prediction System</h1>
 
-A full-stack Machine Learning web application that predicts the risk of brain stroke based on user health data.
-Built using **Flask, MongoDB, and Scikit-learn**.
+<p align="center">
+🚀 AI-powered web application to predict stroke risk using Machine Learning  
+</p>
 
----
-
-## 🚀 Features
-
-* 🔐 User Authentication (Signup, Login, OTP Verification)
-* 📧 Email-based OTP system
-* 🧠 Stroke Prediction using trained ML model
-* 📊 Dashboard with prediction history
-* 👤 User Profile Management
-* 🔁 Forgot Password & Reset System
-* 💾 MongoDB database integration
+<p align="center">
+Flask • MongoDB • Scikit-learn
+</p>
 
 ---
 
-## 🛠️ Technologies Used
+## 📌 Introduction
 
-* **Frontend:** HTML
-* **Backend:** Flask (Python)
-* **Database:** MongoDB
-* **Machine Learning:** Scikit-learn
-* **Libraries:** NumPy, Pandas, Joblib
+The **Brain Stroke Prediction System** is a full-stack web application that predicts the probability of a stroke based on user health data.
+
+It helps in **early detection**, reducing serious health risks using AI.
 
 ---
+
+## 🎯 Features
+
+### 🔐 Authentication
+- Signup with Email OTP verification
+- Login system
+- Forgot Password (OTP reset)
+
+### 🧠 Prediction System
+- AI-based stroke prediction
+- Risk percentage (%)
+- Risk levels:
+  - 🟢 Low
+  - 🟡 Medium
+  - 🔴 High
+
+### 👤 User Features
+- Profile management
+- Update details & password
+- Prediction history tracking
+
+### 🎨 UI Features
+- Responsive design
+- Dark / Light mode
+- Animated UI
+- Modern dashboard
+
+---
+
+## 🧠 Machine Learning
+
+- Dataset: `Brain.csv`
+- Data size: 50,000 samples
+
+### Models Used:
+- Logistic Regression
+- Decision Tree
+- Random Forest ✅ (Best Model)
+
+### Output:
+- Stroke Risk (%)
+- Risk Level (Low / Medium / High)
+
+---
+
+## ⚙️ Tech Stack
+
+### 💻 Frontend
+- HTML
+- CSS
+- JavaScript
+
+### 🔧 Backend
+- Flask (Python)
+
+### 🗄 Database
+- MongoDB Atlas
+
+### 🤖 ML Libraries
+- Pandas
+- NumPy
+- Scikit-learn
+- Joblib
+
+---
+
+## 📁 Project Structure
+
 
 ## 📁 Project Structure
 
@@ -33,108 +92,52 @@ Built using **Flask, MongoDB, and Scikit-learn**.
 
 BRAINSTROKE/
 │
+├── static/
+│   ├── bg.jpg
+│   ├── favicon.png
+│   ├── logo.png
+│   └── stroke.png
+│
 ├── templates/
 │   ├── dashboard.html
 │   ├── forgot_password.html
 │   ├── history.html
+│   ├── index.html
 │   ├── login.html
-│   ├── login_error.html
-│   ├── new_password.html
 │   ├── profile.html
-│   ├── reset_verify.html
 │   ├── result.html
-│   ├── signup.html
-│   ├── signup_success.html
-│   ├── user_exists.html
-│   ├── verify_otp.html
+│   └── signup.html
 │
-├── model/
-│   └── stroke_model.pkl
-│
-├── dataset/
-│   └── stroke_dataset_500k_balanced.csv
+├── __pycache__/
 │
 ├── app.py
 ├── train_model.py
+├── stroke_model.pkl
+├── Brain.csv
+│
 ├── requirements.txt
-├── .env
 ├── README.md
+├── .env
+├── .gitignore
+│
+└── (Flask Run Entry)
 </pre>
+
+
 ---
 
-## 📦 Installation & Setup
+## 🔧 Installation & Setup
 
 ### 1️⃣ Install Dependencies
-
+```bash
 pip install -r requirements.txt
 
----
-
-### 2️⃣ Start MongoDB
-
-Make sure MongoDB is installed and running:
-
-mongod
-
----
-
-### 3️⃣ Add Dataset
-
-Place the dataset file inside the project folder:
-
-stroke_dataset_500k_balanced.csv
-
----
-
-### 4️⃣ Train the Model (Optional)
-
-python train_model.py
-
-This will generate:
-
-stroke_model.pkl
-
----
-
-### 5️⃣ Run the Application
-
-python app.py
-
----
-
-### 6️⃣ Open in Browser
-
-http://127.0.0.1:5000
-
----
-
-## 🔑 Environment Variables (.env)
-
-Create a `.env` file and add:
-
 SECRET_KEY=your_secret_key
-MONGO_URI=mongodb://localhost:27017/brainstroke
-EMAIL_USER=[your_email@gmail.com](mailto:your_email@gmail.com)
-EMAIL_PASS=your_email_password
 
----
+MONGO_URI=your_mongodb_uri
 
-## 🧠 Machine Learning Model
-
-* Dataset: Stroke Dataset (500k balanced)
-* Algorithms: Logistic Regression / Random Forest
-* Output: Stroke Risk (Yes / No)
-
----
-
-## ⚠️ Important Notes
-
-* MongoDB must be running before starting the app
-* Email credentials are required for OTP verification
-* Ensure `stroke_model.pkl` exists before running app
-* Update file paths if you change folder structure
-
----
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_app_password
 
 ## 👨‍💻 Author
 
@@ -156,4 +159,3 @@ EMAIL_PASS=your_email_password
 
 ---
 
-## ❤️ Thank You

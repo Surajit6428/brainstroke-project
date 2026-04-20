@@ -2,238 +2,395 @@
 <html>
 
 <head>
-<title>User Profile</title>
-<link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User Profile</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<style>
-body{
-margin:0;
-font-family:Arial;
-background:#f4f6f9;
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-}
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-.container{
-background:white;
-padding:30px;
-border-radius:12px;
-width:90%;
-max-width:450px;
-box-shadow:0 10px 25px rgba(0,0,0,0.1);
-text-align:center;
-}
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: url("{{ url_for('static', filename='bg.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            transition: 0.4s;
+        }
 
-.avatar{
-width:70px;
-height:70px;
-background:#4facfe;
-color:white;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:24px;
-font-weight:bold;
-margin:auto;
-margin-bottom:15px;
-}
+        body.light {
+            filter: brightness(1.1);
+        }
 
-h2{
-margin-bottom:20px;
-color:#2c3e50;
-}
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.5);
+            z-index: -1;
+        }
 
-label{
-font-weight:bold;
-display:block;
-margin-top:10px;
-text-align:left;
-}
+        /* NAVBAR */
+        .navbar {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 18px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
 
-input{
-width:100%;
-padding:10px;
-border-radius:6px;
-border:1px solid #ccc;
-margin-top:5px;
-}
+        .navbar h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #1f2937;
+        }
 
-.strength{
-font-size:12px;
-margin-top:5px;
-text-align:left;
-}
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-.msg{
-padding:10px;
-margin-bottom:15px;
-border-radius:6px;
-font-weight:bold;
-text-align:left;
-}
+        .icon-btn,
+        .toggle {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.05);
+            transition: 0.3s;
+        }
 
-.msg.error{
-background:#ffe6e6;
-color:red;
-}
+        .icon-btn:hover {
+            transform: scale(1.1);
+            background: rgba(79, 172, 254, 0.2);
+        }
 
-.msg.success{
-background:#e6ffe6;
-color:green;
-}
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
 
-.error{
-color:red;
-font-size:13px;
-margin-top:5px;
-text-align:left;
-}
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: #4f46e5;
+        }
 
-button{
-margin-top:15px;
-width:100%;
-padding:12px;
-background:#4facfe;
-border:none;
-color:white;
-border-radius:6px;
-font-size:16px;
-cursor:pointer;
-}
+        .toggle {
+            font-size: 18px;
+        }
 
-button:hover{
-background:#3a8de0;
-}
+        .toggle:hover {
+            transform: rotate(180deg) scale(1.1);
+        }
 
-.back{
-text-align:center;
-margin-top:10px;
-}
+        /* ===== ORIGINAL CODE BELOW ===== */
 
-.back a{
-text-decoration:none;
-color:#4facfe;
-font-weight:bold;
-}
-</style>
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+        }
 
-<script>
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+        }
 
-// 🔥 strength checker
-function checkStrength(){
-let pass=document.getElementById("new_password").value
-let strength=document.getElementById("strength")
+        .profile-top {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 25px;
+        }
 
-let strong=/((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&]))/
+        .avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
 
-if(pass.length==0){
-strength.innerHTML=""
-}
-else if(pass.length<6){
-strength.innerHTML="Weak Password"
-strength.style.color="red"
-}
-else if(strong.test(pass)){
-strength.innerHTML="Strong Password"
-strength.style.color="green"
-}
-else{
-strength.innerHTML="Medium Password"
-strength.style.color="orange"
-}
-}
+        .profile-info h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #111827;
+        }
 
-// 🔥 validation
-function validateForm(){
+        .profile-info p {
+            margin: 3px 0 0;
+            font-size: 13px;
+            color: #6b7280;
+        }
 
-let oldPass = document.querySelector('input[name="old_password"]').value
-let newPass = document.getElementById("new_password").value
-let confirmPass = document.getElementById("confirm_password").value
-let error = document.getElementById("error")
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
 
-if(oldPass === ""){
-error.innerHTML = "❌ Enter old password"
-return false
-}
+        .full {
+            grid-column: span 2;
+        }
 
-if(newPass === ""){
-error.innerHTML = "❌ Enter new password"
-return false
-}
+        label {
+            font-size: 12px;
+            color: #6b7280;
+        }
 
-if(newPass !== confirmPass){
-error.innerHTML = "❌ Password does not match"
-return false
-}
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            margin-top: 6px;
+            font-size: 14px;
+            background: #f9fafb;
+        }
 
-error.innerHTML = ""
-return true
-}
-</script>
+        input:focus {
+            border-color: #6366f1;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+            outline: none;
+        }
+
+        .msg {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .msg.error {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .msg.success {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .strength {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .error {
+            color: #dc2626;
+            font-size: 13px;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            border: none;
+            color: white;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        @media(max-width:600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: span 1;
+            }
+        }
+    </style>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle("light");
+            localStorage.setItem("theme",
+                document.body.classList.contains("light") ? "light" : "dark");
+            updateIcon();
+        }
+
+        function updateIcon() {
+            document.getElementById("themeIcon").innerHTML =
+                document.body.classList.contains("light") ? "☀" : "🌙";
+        }
+
+        window.onload = function () {
+            if (localStorage.getItem("theme") === "light") {
+                document.body.classList.add("light");
+            }
+            updateIcon();
+        }
+
+        function checkStrength() {
+            let pass = document.getElementById("new_password").value
+            let strength = document.getElementById("strength")
+            let strong = /((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&]))/
+
+            if (pass.length == 0) strength.innerHTML = ""
+            else if (pass.length < 6) { strength.innerHTML = "Weak Password"; strength.style.color = "red" }
+            else if (strong.test(pass)) { strength.innerHTML = "Strong Password"; strength.style.color = "green" }
+            else { strength.innerHTML = "Medium Password"; strength.style.color = "orange" }
+        }
+
+        function validateForm() {
+            let oldPass = document.querySelector('input[name="old_password"]').value
+            let newPass = document.getElementById("new_password").value
+            let confirmPass = document.getElementById("confirm_password").value
+            let error = document.getElementById("error")
+
+            if (oldPass === "") return error.innerHTML = "❌ Enter old password", false
+            if (newPass === "") return error.innerHTML = "❌ Enter new password", false
+            if (newPass !== confirmPass) return error.innerHTML = "❌ Password does not match", false
+
+            error.innerHTML = ""
+            return true
+        }
+    </script>
 
 </head>
 
 <body>
 
-<div class="container">
+    <div class="navbar">
+        <h2>Brainstroke Prediction</h2>
 
-<div class="avatar">
-{{ user.first_name[0]|upper }}{{ user.last_name[0]|upper }}
-</div>
+        <div class="nav-links">
 
-<h2>User Profile</h2>
+            <div class="icon-btn" onclick="location.href='/dashboard'">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                </svg>
+            </div>
 
-{% if message %}
-  {% if "Incorrect" in message %}
-    <div class="msg error">{{ message }}</div>
-  {% else %}
-    <div class="msg success">{{ message }}</div>
-  {% endif %}
-{% endif %}
+            <div class="icon-btn" onclick="location.href='/history'">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <path d="M3 3v5h5" />
+                    <path d="M3.05 13A9 9 0 1 0 6 5.3" />
+                    <polyline points="12 7 12 12 15 14" />
+                </svg>
+            </div>
 
-<form action="/update_profile" method="post" onsubmit="return validateForm()">
+            <div class="icon-btn logout-btn" onclick="location.href='/logout'">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+            </div>
 
-<label>First Name</label>
-<input type="text" name="first_name" value="{{ user.first_name or '' }}" required>
+            <div class="toggle" onclick="toggleTheme()" id="themeIcon">🌙</div>
 
-<label>Middle Name</label>
-<input type="text" name="middle_name" value="{{ user.middle_name or '' }}">
+        </div>
+    </div>
 
-<label>Last Name</label>
-<input type="text" name="last_name" value="{{ user.last_name or '' }}" required>
+    <!-- ✅ FORM FULLY PRESENT -->
+    <div class="container">
+        <div class="card">
 
-<label>Username</label>
-<input type="text" name="username" value="{{ user.username }}" readonly>
+            <div class="profile-top">
+                <div class="avatar">
+                    {{ user.first_name[0]|upper }}{{ user.last_name[0]|upper }}
+                </div>
+                <div class="profile-info">
+                    <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+                    <p>{{ user.email }}</p>
+                </div>
+            </div>
 
-<label>Email</label>
-<input type="email" name="email" value="{{ user.email or '' }}">
+            {% if message %}
+            {% if "Incorrect" in message %}
+            <div class="msg error">{{ message }}</div>
+            {% else %}
+            <div class="msg success">{{ message }}</div>
+            {% endif %}
+            {% endif %}
 
-<label>Enter Old Password</label>
-<input type="password" name="old_password">
+            <form action="/update_profile" method="post" onsubmit="return validateForm()">
+                <div class="grid">
 
-<label>Enter New Password</label>
-<input type="password" id="new_password" name="new_password" onkeyup="checkStrength()">
+                    <div>
+                        <label>First Name</label>
+                        <input type="text" name="first_name" value="{{ user.first_name or '' }}" required>
+                    </div>
 
-<div id="strength" class="strength"></div>
+                    <div>
+                        <label>Middle Name</label>
+                        <input type="text" name="middle_name" value="{{ user.middle_name or '' }}">
+                    </div>
 
-<label>Re-enter New Password</label>
-<input type="password" id="confirm_password">
+                    <div>
+                        <label>Last Name</label>
+                        <input type="text" name="last_name" value="{{ user.last_name or '' }}" required>
+                    </div>
 
-<div id="error" class="error"></div>
+                    <div>
+                        <label>Username</label>
+                        <input type="text" name="username" value="{{ user.username }}" readonly>
+                    </div>
 
-<button type="submit">Update Profile</button>
+                    <div class="full">
+                        <label>Email</label>
+                        <input type="email" name="email" value="{{ user.email or '' }}">
+                    </div>
 
-</form>
+                    <div class="full">
+                        <label>Old Password</label>
+                        <input type="password" name="old_password">
+                    </div>
 
-<div class="back">
-<a href="/dashboard">⬅ Back to Dashboard</a>
-</div>
+                    <div>
+                        <label>New Password</label>
+                        <input type="password" id="new_password" name="new_password" onkeyup="checkStrength()">
+                        <div id="strength" class="strength"></div>
+                    </div>
 
-</div>
+                    <div>
+                        <label>Confirm Password</label>
+                        <input type="password" id="confirm_password">
+                    </div>
+
+                </div>
+
+                <div id="error" class="error"></div>
+
+                <button type="submit">Update Profile</button>
+            </form>
+
+        </div>
+    </div>
 
 </body>
+
 </html>

@@ -2,182 +2,339 @@
 <html>
 
 <head>
-
     <title>Stroke Prediction Dashboard</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: Arial;
-            background: #f4f6f9;
-            padding: 30px;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .container {
-            max-width: 900px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        html,
+        body {
+            height: 100%;
+            font-family: 'Segoe UI', sans-serif;
         }
 
-        .header {
+        /* 🔥 SINGLE BACKGROUND IMAGE */
+        body {
+            background-image: url("{{ url_for('static', filename='bg.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        /* 🔥 OVERLAY (LIGHT) */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.75);
+            z-index: 0;
+        }
+
+        /* 🌙 DARK MODE OVERLAY */
+        body.dark::before {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .dark .navbar {
+            background: rgba(22, 27, 34, 0.9);
+            color: white;
+        }
+
+        .nav-links a {
+            margin-left: 12px;
+            font-size: 18px;
+            color: #4facfe;
+            text-decoration: none;
+            width: 42px;
+            height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(79, 172, 254, 0.08);
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            transform: translateY(-3px) scale(1.1);
+        }
+
+        .toggle-btn {
+            cursor: pointer;
+            margin-left: 15px;
+        }
+
+        /* MAIN */
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 16px;
+            margin-top: 20px;
+        }
+
+        .dark .card {
+            background: rgba(22, 27, 34, 0.95);
+            color: white;
+        }
+
+        .sub {
             margin-bottom: 20px;
         }
 
-        .links a {
-            margin-left: 15px;
-            text-decoration: none;
-            color: #4facfe;
-            font-weight: bold;
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
 
-        .section {
-            margin-top: 30px;
-            padding: 20px;
-            border: 1px solid #eee;
-            border-radius: 8px;
+        .full {
+            grid-column: span 2;
         }
 
         input,
         select {
             width: 100%;
             padding: 10px;
-            margin-top: 8px;
-            margin-bottom: 15px;
+            border-radius: 8px;
             border: 1px solid #ccc;
-            border-radius: 6px;
+            margin-top: 5px;
+        }
+
+        .dark input,
+        .dark select {
+            background: #0d1117;
+            color: white;
+            border: 1px solid #30363d;
         }
 
         button {
             width: 100%;
-            padding: 12px;
-            background: #4facfe;
+            padding: 14px;
+            background: linear-gradient(135deg, #4facfe, #00c6ff);
             border: none;
             color: white;
-            font-size: 16px;
-            border-radius: 6px;
-            cursor: pointer;
+            border-radius: 10px;
+            margin-top: 15px;
         }
 
-        button:hover {
-            background: #3a8de0;
+        /* POPUP */
+        .logout-popup {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
         }
 
-        .error {
-            color: red;
-            margin-bottom: 10px;
+        .popup-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .popup-box button {
+            margin: 10px;
+        }
+
+        .yes {
+            background: red;
+            color: white;
+        }
+
+        .no {
+            background: gray;
+        }
+
+        /* MOBILE */
+        @media(max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: span 1;
+            }
         }
     </style>
-
 </head>
 
 <body>
 
-    <div class="container">
+    <div class="navbar">
+        <h2>Brainstroke Prediction</h2>
 
-        <div class="header">
-
-            <div>
-                <h2>Stroke Prediction</h2>
-                <p>Welcome <b>{{user.first_name}}</b></p>
-            </div>
-
-            <div class="links">
-                <a href="/profile">Profile</a>
-                <a href="/history">History</a>
-                <a href="/logout">Logout</a>
-            </div>
-
+        <div class="nav-links">
+            <a href="/profile"><i class="fa-solid fa-user"></i></a>
+            <a href="/history"><i class="fa-solid fa-clock-rotate-left"></i></a>
+            <a href="#" onclick="openLogout()">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </a>
+            <span class="toggle-btn" id="modeIcon" onclick="toggleMode()">☀</span>
         </div>
+    </div>
 
-        <div class="section">
+    <div class="container">
+        <div class="card">
 
-            <h4>System will automatically choose the best Machine Learning model</h4>
-
-            <!-- ERROR SHOW -->
-            {% if error %}
-                <div class="error">{{ error }}</div>
-            {% endif %}
+            <h3>Stroke Prediction Dashboard</h3>
+            <p class="sub">Welcome <b>{{user.first_name}}</b></p>
 
             <form action="/auto_predict" method="post">
 
-                <label>Gender</label>
-                <select name="param" required>
-                    <option value="" disabled selected>--Select--</option>
-                    <option value="1">Male</option>
-                    <option value="0">Female</option>
-                </select>
+                <div class="grid">
 
-                <label>Age</label>
-                <input type="number" name="param" required>
+                    <div>
+                        <label>Gender</label>
+                        <select name="param" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Male</option>
+                            <option value="0">Female</option>
+                        </select>
+                    </div>
 
-                <label>Hypertension</label>
-                <select name="param" required>
-                    <option value="" disabled selected>--Select--</option>
-                    <option value="0">No</option>
-                    <option value="1">Yes</option>
-                </select>
+                    <div>
+                        <label>Age</label>
+                        <input type="number" name="param" required>
+                    </div>
 
-                <label>Heart Disease</label>
-                <select name="param" required>
-                    <option value="" disabled selected>--Select--</option>
-                    <option value="0">No</option>
-                    <option value="1">Yes</option>
-                </select>
+                    <div>
+                        <label>Hypertension</label>
+                        <select name="param" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
 
-                <label>Ever Married</label>
-                <select name="param" required>
-                    <option value="" disabled selected>--Select--</option>
-                    <option value="0">No</option>
-                    <option value="1">Yes</option>
-                </select>
+                    <div>
+                        <label>Heart Disease</label>
+                        <select name="param" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
 
-                <label>Work Type</label>
-                <select name="param" required>
-                    <option value="" disabled selected>--Select--</option>
-                    <option value="0">Children</option>
-                    <option value="1">Private</option>
-                    <option value="2">Never Worked</option>
-                    <option value="3">Self Employed</option>
-                    <option value="4">Government Job</option>
-                </select>
+                    <div>
+                        <label>Ever Married</label>
+                        <select name="param" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
 
-                <label>Residence Type</label>
-                <select name="param" required>
-                    <option value="" disabled selected>--Select--</option>
-                    <option value="0">Rural</option>
-                    <option value="1">Urban</option>
-                </select>
+                    <div>
+                        <label>Work Type</label>
+                        <select name="param" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="0">Children</option>
+                            <option value="1">Private</option>
+                            <option value="2">Never Worked</option>
+                            <option value="3">Self Employed</option>
+                            <option value="4">Government Job</option>
+                        </select>
+                    </div>
 
-                <label>Average Glucose Level</label>
-                <input type="number" step="0.1" name="param" required>
+                    <div>
+                        <label>Residence Type</label>
+                        <select name="param" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="0">Rural</option>
+                            <option value="1">Urban</option>
+                        </select>
+                    </div>
 
-                <label>BMI</label>
-                <input type="number" step="0.1" name="param" required>
+                    <div>
+                        <label>Smoking Status</label>
+                        <select name="param" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="0">Unknown</option>
+                            <option value="1">Never Smoked</option>
+                            <option value="2">Formerly Smoked</option>
+                            <option value="3">Smokes</option>
+                        </select>
+                    </div>
 
-                <label>Smoking Status</label>
-                <select name="param" required>
-                    <option value="" disabled selected>--Select--</option>
-                    <option value="0">Unknown</option>
-                    <option value="1">Never Smoked</option>
-                    <option value="2">Formerly Smoked</option>
-                    <option value="3">Smokes</option>
-                </select>
+                    <div class="full">
+                        <label>Average Glucose Level</label>
+                        <input type="number" step="0.1" name="param" required>
+                    </div>
 
-                <button type="submit">Predict with Best Model</button>
+                    <div class="full">
+                        <label>BMI</label>
+                        <input type="number" step="0.1" name="param" required>
+                    </div>
+
+                </div>
+
+                <button type="submit">Predict Stroke Risk</button>
 
             </form>
 
         </div>
-
     </div>
+
+    <div class="logout-popup" id="logoutBox">
+        <div class="popup-box">
+            <p>Are you sure to logout?</p>
+            <button class="yes" onclick="goLogout()">Yes</button>
+            <button class="no" onclick="closeLogout()">No</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleMode() {
+            let body = document.body;
+            let icon = document.getElementById("modeIcon");
+
+            body.classList.toggle("dark");
+            icon.innerHTML = body.classList.contains("dark") ? "🌙" : "☀";
+        }
+
+        function openLogout() {
+            document.getElementById("logoutBox").style.display = "flex";
+        }
+
+        function closeLogout() {
+            document.getElementById("logoutBox").style.display = "none";
+        }
+
+        function goLogout() {
+            window.location.href = "/logout";
+        }
+    </script>
 
 </body>
 
