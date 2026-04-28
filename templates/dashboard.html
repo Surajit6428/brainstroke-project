@@ -9,62 +9,65 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
+        :root {
+            --primary: #4facfe;
+            --secondary: #00c6ff;
+            --card: rgba(255,255,255,0.95);
+            --dark-card: rgba(22,27,34,0.95);
+            --border: rgba(255,255,255,0.2);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        html,
-        body {
+        html, body {
             height: 100%;
             font-family: 'Segoe UI', sans-serif;
         }
 
-        /* 🔥 SINGLE BACKGROUND IMAGE */
+        /* BACKGROUND */
         body {
-            background-image: url("{{ url_for('static', filename='bg.jpg') }}");
+            background: url("{{ url_for('static', filename='bg.jpg') }}") no-repeat center center fixed;
             background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
             position: relative;
         }
 
-        /* 🔥 OVERLAY (LIGHT) */
         body::before {
             content: "";
             position: fixed;
             inset: 0;
-            background: rgba(255, 255, 255, 0.75);
+            background: rgba(255,255,255,0.7);
             z-index: 0;
         }
 
-        /* 🌙 DARK MODE OVERLAY */
         body.dark::before {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0,0,0,0.75);
         }
 
         /* NAVBAR */
         .navbar {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(10px);
             padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
             z-index: 2;
+            position: relative;
         }
 
         .dark .navbar {
-            background: rgba(22, 27, 34, 0.9);
+            background: rgba(22,27,34,0.85);
             color: white;
         }
 
         .nav-links a {
             margin-left: 12px;
             font-size: 18px;
-            color: #4facfe;
+            color: var(--primary);
             text-decoration: none;
             width: 42px;
             height: 42px;
@@ -72,17 +75,20 @@
             align-items: center;
             justify-content: center;
             border-radius: 12px;
-            background: rgba(79, 172, 254, 0.08);
+            background: rgba(79, 172, 254, 0.1);
             transition: 0.3s;
         }
 
         .nav-links a:hover {
-            transform: translateY(-3px) scale(1.1);
+            transform: translateY(-3px);
+            background: var(--primary);
+            color: white;
         }
 
         .toggle-btn {
             cursor: pointer;
             margin-left: 15px;
+            font-size: 18px;
         }
 
         /* MAIN */
@@ -95,21 +101,30 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--card);
+            backdrop-filter: blur(12px);
             padding: 30px;
-            border-radius: 16px;
+            border-radius: 18px;
             margin-top: 20px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
         }
 
         .dark .card {
-            background: rgba(22, 27, 34, 0.95);
+            background: var(--dark-card);
             color: white;
         }
 
         .sub {
             margin-bottom: 20px;
+            color: #6b7280;
         }
 
+        .dark .sub {
+            color: #9ca3af;
+        }
+
+        /* GRID */
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -120,30 +135,48 @@
             grid-column: span 2;
         }
 
-        input,
-        select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            margin-top: 5px;
+        label {
+            font-size: 13px;
         }
 
-        .dark input,
-        .dark select {
+        input, select {
+            width: 100%;
+            padding: 11px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-top: 5px;
+            background: rgba(255,255,255,0.6);
+            transition: 0.25s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,172,254,0.2);
+            outline: none;
+        }
+
+        .dark input, .dark select {
             background: #0d1117;
             color: white;
             border: 1px solid #30363d;
         }
 
+        /* BUTTON */
         button {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #4facfe, #00c6ff);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             border: none;
             color: white;
-            border-radius: 10px;
-            margin-top: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
         }
 
         /* POPUP */
@@ -151,7 +184,7 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0,0,0,0.6);
             justify-content: center;
             align-items: center;
             z-index: 999;
@@ -159,21 +192,39 @@
 
         .popup-box {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            width: 300px;
+            animation: pop 0.25s ease;
         }
 
-        .popup-box button {
-            margin: 10px;
-        }
-
-        .yes {
-            background: red;
+        .dark .popup-box {
+            background: #161b22;
             color: white;
         }
 
+        @keyframes pop {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .popup-box p {
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+
+        .popup-box button {
+            margin: 5px;
+            width: 45%;
+        }
+
+        .yes {
+            background: #ef4444;
+        }
+
         .no {
-            background: gray;
+            background: #6b7280;
         }
 
         /* MOBILE */
@@ -181,11 +232,11 @@
             .grid {
                 grid-template-columns: 1fr;
             }
-
             .full {
                 grid-column: span 1;
             }
         }
+
     </style>
 </head>
 
@@ -308,7 +359,7 @@
 
     <div class="logout-popup" id="logoutBox">
         <div class="popup-box">
-            <p>Are you sure to logout?</p>
+            <p>Are you sure you want to logout?</p>
             <button class="yes" onclick="goLogout()">Yes</button>
             <button class="no" onclick="closeLogout()">No</button>
         </div>

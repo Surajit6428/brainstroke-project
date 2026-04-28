@@ -129,9 +129,6 @@ model = joblib.load("stroke_model.pkl")
 @app.route("/")
 def home():
    return render_template("index.html")
-
-
-
 # ================= SIGNUP =================
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -478,69 +475,7 @@ def history():
 
     return render_template("history.html",data=data)
 
-
-# ================= MANUAL PREDICTION =================
-
-# @app.route("/predict", methods=["POST"])
-# def predict():
-
-#     if "user" not in session:
-#         return redirect("/")
-
-#     # selected model name from dashboard
-#     model_name = request.form.get("model")
-
-#     values = []
-
-#     for x in request.form.getlist("param"):
-#         try:
-#             values.append(float(x))
-#         except:
-#             values.append(0)
-
-#     while len(values) < 10:
-#         values.append(0)
-
-#     columns = [
-#         "gender",
-#         "age",
-#         "hypertension",
-#         "heart_disease",
-#         "ever_married",
-#         "work_type",
-#         "Residence_type",
-#         "avg_glucose_level",
-#         "bmi",
-#         "smoking_status"
-#     ]
-
-#     arr = pd.DataFrame([values], columns=columns)
-
-#     pred = model.predict(arr)[0]
-
-#     try:
-#         prob = model.predict_proba(arr)[0][1]
-#         risk = int(prob * 100)
-#     except:
-#         risk = 50
-
-#     # store in MongoDB
-#     predictions.insert_one({
-#         "user": session["user"],
-#         "model": model_name,
-#         "prediction": int(pred),
-#         "risk": risk
-#     })
-
-#     return render_template(
-#         "result.html",
-#         prediction=pred,
-#         risk=risk,
-#         model=model_name
-#     )
-
-
-# ================= AUTO AI PREDICTION =================
+# ================= AUTO  PREDICTION =================
 
 @app.route("/auto_predict", methods=["POST"])
 def auto_predict():
