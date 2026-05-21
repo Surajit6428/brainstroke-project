@@ -1,3 +1,5 @@
+
+
 import pandas as pd
 import joblib
 
@@ -19,16 +21,15 @@ data = pd.read_csv("Brain.csv")
 print("Original Dataset Size:", len(data))
 
 
-# ================= SAMPLING =================
+# ================= REMOVE ID =================
 
-data = data.sample(50000, random_state=42)
-
-print("Training Dataset Size:", len(data))
+if "id" in data.columns:
+    data = data.drop("id", axis=1)
 
 
 # ================= ENCODE CATEGORICAL DATA =================
 
-for col in data.select_dtypes(include=["object","string"]):
+for col in data.select_dtypes(include=["object", "string"]):
 
     le = LabelEncoder()
 
@@ -39,7 +40,7 @@ print("Categorical Encoding Completed")
 
 # ================= SPLIT FEATURES & TARGET =================
 
-X = data.drop(["stroke","id"], axis=1)
+X = data.drop(["stroke"], axis=1)
 
 y = data["stroke"]
 
@@ -50,7 +51,8 @@ X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
     test_size=0.2,
-    random_state=42
+    random_state=42,
+    stratify=y
 )
 
 print("Train Test Split Completed")
@@ -61,16 +63,32 @@ print("Train Test Split Completed")
 models = {
 
     "Logistic Regression":
-        LogisticRegression(max_iter=500),
+        LogisticRegression(
+            max_iter=1000,
+            class_weight="balanced"
+        ),
 
     "Decision Tree":
-        DecisionTreeClassifier(random_state=42),
+        DecisionTreeClassifier(
+            random_state=42,
+            class_weight="balanced",
+            max_depth=8
+        ),
 
     "Random Forest":
-        RandomForestClassifier(n_estimators=100, random_state=42),
+        RandomForestClassifier(
+            n_estimators=200,
+            random_state=42,
+            class_weight="balanced",
+             max_depth=8
+        ),
 
     # "Support Vector Machine":
-    #     SVC(kernel="linear", probability=True)
+    #     SVC(
+    #         kernel="linear",
+    #         probability=True,
+    #         class_weight="balanced"
+    #     )
 
 }
 

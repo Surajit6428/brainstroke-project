@@ -74,7 +74,7 @@ Brain Stroke Prediction Team
 def send_welcome_email(receiver_email, username, user_password, name):
 
     sender_email = os.getenv("EMAIL_USER")
-    sender_password = os.getenv("EMAIL_PASS")   # ✅ FIX
+    sender_password = os.getenv("EMAIL_PASS")   
 
     message = MIMEText(f"""
 Dear {name},
@@ -104,7 +104,7 @@ Brain Stroke Prediction Team
 
     server = smtplib.SMTP("smtp.gmail.com",587)
     server.starttls()
-    server.login(sender_email, sender_password)   # ✅ FIX
+    server.login(sender_email, sender_password)   
 
     server.sendmail(sender_email, receiver_email, message.as_string())
     server.quit()
@@ -495,18 +495,17 @@ def auto_predict():
         values.append(0)
 
     columns = [
-        "gender",
-        "age",
-        "hypertension",
-        "heart_disease",
-        "ever_married",
-        "work_type",
-        "Residence_type",
-        "avg_glucose_level",
-        "bmi",
-        "smoking_status"
-    ]
-
+    "gender",
+    "age",
+    "hypertension",
+    "heart_disease",
+    "ever_married",
+    "work_type",
+    "Residence_type",
+    "avg_glucose_level",
+    "bmi",
+    "smoking_status",
+]
     arr = pd.DataFrame([values], columns=columns)
 
     pred = model.predict(arr)[0]
@@ -518,7 +517,7 @@ def auto_predict():
         risk = 50
 
     # 🔥 NEW: Risk Level
-    if risk < 30:
+    if risk < 40:
         level = "Low"
     elif risk < 70:
         level = "Medium"

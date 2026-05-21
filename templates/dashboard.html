@@ -232,6 +232,7 @@
             .grid {
                 grid-template-columns: 1fr;
             }
+
             .full {
                 grid-column: span 1;
             }
@@ -247,144 +248,257 @@
 
         <div class="nav-links">
             <a href="/profile"><i class="fa-solid fa-user"></i></a>
-            <a href="/history"><i class="fa-solid fa-clock-rotate-left"></i></a>
+
+            <a href="/history">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+            </a>
+
             <a href="#" onclick="openLogout()">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i>
             </a>
-            <span class="toggle-btn" id="modeIcon" onclick="toggleMode()">☀</span>
+
+            <span class="toggle-btn"
+                id="modeIcon"
+                onclick="toggleMode()">☀</span>
         </div>
     </div>
 
     <div class="container">
+
         <div class="card">
 
             <h3>Stroke Prediction Dashboard</h3>
-            <p class="sub">Welcome <b>{{user.first_name}}</b></p>
+
+            <p class="sub">
+                Welcome <b>{{user.first_name}}</b>
+            </p>
 
             <form action="/auto_predict" method="post">
 
                 <div class="grid">
 
                     <div>
-                        <label>Gender</label>
+                        <label>gender</label>
+
                         <select name="param" required>
+
                             <option value="" disabled selected>Select</option>
+
                             <option value="1">Male</option>
+
                             <option value="0">Female</option>
+
                         </select>
                     </div>
 
                     <div>
-                        <label>Age</label>
-                        <input type="number" name="param" required>
+                        <label>age</label>
+
+                        <input 
+                        type="number"
+                        min="1"
+                        max="120"
+                        name="param"required>
                     </div>
 
                     <div>
-                        <label>Hypertension</label>
+                        <label>hypertension</label>
+
                         <select name="param" required>
+
                             <option value="" disabled selected>Select</option>
+
                             <option value="0">No</option>
+
                             <option value="1">Yes</option>
+
                         </select>
                     </div>
 
                     <div>
-                        <label>Heart Disease</label>
+                        <label>heart_disease</label>
+
                         <select name="param" required>
+
                             <option value="" disabled selected>Select</option>
+
                             <option value="0">No</option>
+
                             <option value="1">Yes</option>
+
                         </select>
                     </div>
 
                     <div>
-                        <label>Ever Married</label>
+                        <label>ever_married</label>
+
                         <select name="param" required>
+
                             <option value="" disabled selected>Select</option>
+
                             <option value="0">No</option>
+
                             <option value="1">Yes</option>
+
                         </select>
                     </div>
 
                     <div>
-                        <label>Work Type</label>
+                        <label>work_type</label>
+
                         <select name="param" required>
+
                             <option value="" disabled selected>Select</option>
+
                             <option value="0">Children</option>
+
                             <option value="1">Private</option>
+
                             <option value="2">Never Worked</option>
+
                             <option value="3">Self Employed</option>
+
                             <option value="4">Government Job</option>
+
                         </select>
                     </div>
 
                     <div>
-                        <label>Residence Type</label>
+                        <label>Residence_type</label>
+
                         <select name="param" required>
+
                             <option value="" disabled selected>Select</option>
+
                             <option value="0">Rural</option>
+
                             <option value="1">Urban</option>
+
                         </select>
+                    </div>
+
+                    <!-- GLUCOSE LEVEL -->
+
+                    <div class="full">
+
+                        <label>
+                            avg_glucose_level 
+                        </label>
+
+                        <input
+                            type="number"
+                            step="0.1"
+                            min="20"
+                            max="600"
+                            placeholder="Enter value between 20 - 600"
+                            name="param"
+                            required>
+
+                    </div>
+
+                    <!-- BMI -->
+
+                    <div class="full">
+
+                        <label>
+                            bmi 
+                        </label>
+
+                        <input
+                            type="number"
+                            step="0.1"
+                            min="8"
+                            max="120"
+                            placeholder="Enter value between 8 - 120"
+                            name="param"
+                            required>
+
                     </div>
 
                     <div>
-                        <label>Smoking Status</label>
+                        <label>smoking_status</label>
+
                         <select name="param" required>
+
                             <option value="" disabled selected>Select</option>
+
                             <option value="0">Unknown</option>
+
                             <option value="1">Never Smoked</option>
+
                             <option value="2">Formerly Smoked</option>
+
                             <option value="3">Smokes</option>
+
                         </select>
-                    </div>
-
-                    <div class="full">
-                        <label>Average Glucose Level</label>
-                        <input type="number" step="0.1" name="param" required>
-                    </div>
-
-                    <div class="full">
-                        <label>BMI</label>
-                        <input type="number" step="0.1" name="param" required>
                     </div>
 
                 </div>
 
-                <button type="submit">Predict Stroke Risk</button>
+                <button type="submit">
+                    Predict Stroke Risk
+                </button>
 
             </form>
 
         </div>
+
     </div>
 
     <div class="logout-popup" id="logoutBox">
+
         <div class="popup-box">
-            <p>Are you sure you want to logout?</p>
-            <button class="yes" onclick="goLogout()">Yes</button>
-            <button class="no" onclick="closeLogout()">No</button>
+
+            <p>
+                Are you sure you want to logout?
+            </p>
+
+            <button class="yes" onclick="goLogout()">
+                Yes
+            </button>
+
+            <button class="no" onclick="closeLogout()">
+                No
+            </button>
+
         </div>
+
     </div>
 
     <script>
+
         function toggleMode() {
+
             let body = document.body;
-            let icon = document.getElementById("modeIcon");
+
+            let icon =
+                document.getElementById("modeIcon");
 
             body.classList.toggle("dark");
-            icon.innerHTML = body.classList.contains("dark") ? "🌙" : "☀";
+
+            icon.innerHTML =
+                body.classList.contains("dark")
+                ? "🌙"
+                : "☀";
         }
 
         function openLogout() {
-            document.getElementById("logoutBox").style.display = "flex";
+
+            document.getElementById("logoutBox")
+            .style.display = "flex";
         }
 
         function closeLogout() {
-            document.getElementById("logoutBox").style.display = "none";
+
+            document.getElementById("logoutBox")
+            .style.display = "none";
         }
 
         function goLogout() {
+
             window.location.href = "/logout";
         }
+
     </script>
 
 </body>
